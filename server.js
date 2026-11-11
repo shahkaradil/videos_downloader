@@ -287,6 +287,26 @@ app.get('/api/history', (req, res) => {
   }
 });
 
+// Periodic cleanup: delete files older than 30 minutes to save disk space
+const FILE_RETENTION_MS = 30 * 60 * 1000; // 30 minutes
+setInterval(() => {
+  try {
+    const now = Date.now();
+    const files = fs.readdirSync(DOWNLOADS_DIR);
+    for (const file of files) {
+      if (file === '.gitkeep') continue;
+      const filePath = path.join(DOWNLOADS_DIR, file);
+      const stats = fs.statSync(filePath);
+      if (now - stats.mtimeMs > FILE_RETENTION_MS) {
+        fs.unlinkSync(filePath);
+        console.log(`[AutoClean] Deleted old file: ${file}`);
+      }
+    }
+  } catch (err) {
+    console.error('[AutoClean] Error during cleanup:', err);
+  }
+}, 10 * 60 * 1000); // Check every 10 minutes
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`===============================================`);
   console.log(`🚀 Universal Video Downloader is running!`);
