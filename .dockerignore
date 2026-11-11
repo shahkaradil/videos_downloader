@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+downloads/*
+!downloads/.gitkeep
+bin/*.exe
+bin/*.zip
+temp_ffmpeg
+.git
+

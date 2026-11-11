@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: omniloader-video-downloader
+    env: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 3000
+
